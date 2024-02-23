@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Inter"],
+        atkinson: ["Atkinson Hyperlegible"],
       },
       colors: {
         border: "hsl(var(--border))",
