@@ -1,4 +1,6 @@
 import PageTitle from "@/components/PageTitle";
+import { Button } from "@/components/ui/button";
+import { HomeIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function NotFound() {
@@ -8,20 +10,17 @@ export default function NotFound() {
         <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8">
           <div className="py-16">
             <div className="text-center">
-              <p className="text-base font-semibold text-primary">404</p>
+              <h1 className="text-4xl font-semibold text-primary">404</h1>
               <PageTitle>Page not found</PageTitle>
               <p className="mt-2 text-base text-gray-500">
                 Sorry, the page you are looking for doesn't exist.
               </p>
-              <div className="mt-6">
-                <Link
-                  to="/"
-                  className="text-base font-medium hover:text-primary"
-                >
+              <Button variant={"secondary"} className="mt-6" asChild>
+                <Link to="/">
+                  <HomeIcon className="mr-2 h-4 w-4" />
                   Go back home
-                  <span aria-hidden="true"> &rarr;</span>
                 </Link>
-              </div>
+              </Button>
             </div>
           </div>
         </main>
