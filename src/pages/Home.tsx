@@ -18,7 +18,7 @@ export default function Home() {
         <Section
           className="mt-16"
           title="Skills"
-          intro="Tools, frameworks and languages I use the most in my job or my personal projects."
+          intro="Tools, frameworks and languages I use the most in my job or in my personal projects."
         >
           <SkillGrid />
         </Section>
