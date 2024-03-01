@@ -96,7 +96,10 @@ export default function SkillGrid() {
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger>
-                <Logo key={name} className="w-16 h-16 hover:scale-105" />
+                <Logo
+                  key={name}
+                  className="w-16 h-16 hover:scale-105 transition duration-150"
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <p>{name}</p>
