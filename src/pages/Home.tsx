@@ -10,6 +10,7 @@ export default function Home() {
     <>
       <Hello />
       <Section
+        className="mt-32"
         title="Projects"
         intro="A collection of projects I've worked on."
       >
