@@ -1,25 +1,14 @@
 import "./App.css";
 import Footer from "./components/Footer";
-import NotFound from "./pages/404";
-import Home from "./pages/Home";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
+import Header from "./components/Header";
+import Router from "./components/Router";
 
 function App() {
   return (
     <>
+      <Header />
       <main>
-        <RouterProvider router={router} />
+        <Router />
       </main>
       <Footer />
     </>

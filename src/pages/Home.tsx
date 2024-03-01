@@ -12,6 +12,7 @@ export default function Home() {
       <Section
         className="mt-32"
         title="Projects"
+        id="projects"
         intro="A collection of projects I've worked on."
       >
         <ProjectGrid />
@@ -23,7 +24,7 @@ export default function Home() {
       >
         <SkillGrid />
       </Section>
-      <Section className="mt-32" title="Get in touch">
+      <Section className="mt-32" title="Get in touch" id="contact">
         <Contact />
       </Section>
     </>

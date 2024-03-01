@@ -5,7 +5,7 @@ import { socials } from "@/components/Socials";
 export default function Hello() {
   return (
     <>
-      <div className="flex flex-col justify-center md:gap-x-8 gap-y-8 mt-32">
+      <div className="flex flex-col justify-center gap-y-8 mt-32">
         <img
           className="w-32 rounded-3xl aspect-square"
           src="profile-photo.jpg"
@@ -15,7 +15,7 @@ export default function Hello() {
           <h1 className="text-5xl font-bold text-zinc-800">
             Hello, I'm <span className="text-primary">Thomas Bach</span>
           </h1>
-          <h2 className="text-2xl text-zinc-500 tracking-tight">
+          <h2 className="text-2xl text-zinc-500 tracking-tight mt-2">
             💻 Software engineer and DevOps enthusiast
           </h2>
           <div className="flex items-center gap-x-4 mt-4">
