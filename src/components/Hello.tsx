@@ -5,9 +5,9 @@ import { socials } from "@/components/Socials";
 export default function Hello() {
   return (
     <>
-      <div className="flex flex-col justify-center gap-y-8 mt-32">
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-y-8 gap-x-8 mt-32">
         <img
-          className="w-32 rounded-3xl aspect-square"
+          className="w-48 h-48 rounded-3xl aspect-square"
           src="profile-photo.jpg"
           alt="Thomas Bach's profile photo"
         />
