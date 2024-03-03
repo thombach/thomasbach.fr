@@ -1,6 +1,7 @@
 import { Mail } from "lucide-react";
 import { Button } from "./ui/button";
 import { socials } from "@/components/Socials";
+import { Fragment } from "react";
 
 export default function Hello() {
   return (
@@ -28,15 +29,17 @@ export default function Hello() {
             {socials.map(
               ({ name, href, fill, Logo }) =>
                 name !== "mail" && (
-                  <a href={href}>
-                    <Logo
-                      key={name}
-                      className={
-                        "w-6 h-6 hover:text-primary" +
-                        (fill ? " hover:fill-primary" : "")
-                      }
-                    />
-                  </a>
+                  <Fragment key={name}>
+                    <a href={href}>
+                      <Logo
+                        key={name}
+                        className={
+                          "w-6 h-6 hover:text-primary" +
+                          (fill ? " hover:fill-primary" : "")
+                        }
+                      />
+                    </a>
+                  </Fragment>
                 )
             )}
           </div>

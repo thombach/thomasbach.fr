@@ -1,4 +1,5 @@
 import { socials } from "@/components/Socials";
+import { Fragment } from "react";
 
 export default function Footer() {
   return (
@@ -7,15 +8,16 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-y-6">
           <div className="flex flex-row gap-x-4">
             {socials.map(({ name, href, fill, Logo }) => (
-              <a href={href}>
-                <Logo
-                  key={name}
-                  className={
-                    "w-6 h-6 hover:text-primary" +
-                    (fill ? " hover:fill-primary" : "")
-                  }
-                />
-              </a>
+              <Fragment key={name}>
+                <a href={href}>
+                  <Logo
+                    className={
+                      "w-6 h-6 hover:text-primary" +
+                      (fill ? " hover:fill-primary" : "")
+                    }
+                  />
+                </a>
+              </Fragment>
             ))}
           </div>
           <div className="flex flex-col items-center">

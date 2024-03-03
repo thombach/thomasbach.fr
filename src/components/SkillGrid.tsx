@@ -19,6 +19,7 @@ import DockerLogo from "@/assets/skills/docker.svg?react";
 import AwsLogo from "@/assets/skills/aws.svg?react";
 import TerraformLogo from "@/assets/skills/terraform.svg?react";
 import UnityLogo from "@/assets/skills/unity.svg?react";
+import { Fragment } from "react";
 
 interface SkillProps {
   name: string;
@@ -93,19 +94,18 @@ export default function SkillGrid() {
     <>
       <div className="flex flex-wrap justify-center gap-x-8 gap-y-8">
         {skills.map(({ name, Logo }) => (
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger>
-                <Logo
-                  key={name}
-                  className="w-16 h-16 hover:scale-105 transition duration-150"
-                />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{name}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Fragment key={name}>
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Logo className="w-16 h-16 hover:scale-105 transition duration-150" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{name}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </Fragment>
         ))}
       </div>
     </>
