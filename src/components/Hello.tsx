@@ -16,7 +16,7 @@ export default function Hello() {
           <h1 className="text-5xl font-bold text-zinc-800">
             Hello, I'm <span className="text-primary">Thomas Bach</span>
           </h1>
-          <h2 className="text-2xl text-zinc-500 tracking-tight mt-2">
+          <h2 className="text-2xl text-slate-400 tracking-tight mt-2">
             💻 Software engineer and DevOps enthusiast
           </h2>
           <div className="flex items-center gap-x-4 mt-4">
