@@ -1,5 +1,4 @@
-import { socials } from "@/components/Socials";
-import { Fragment } from "react";
+import Socials from "@/components/Socials";
 
 export default function Footer() {
   const currentYear = new Date(Date.now()).getFullYear();
@@ -9,18 +8,7 @@ export default function Footer() {
       <footer className="mt-32 pt-10 pb-16">
         <div className="flex flex-col items-center gap-y-6">
           <div className="flex flex-row gap-x-4">
-            {socials.map(({ name, href, fill, Logo }) => (
-              <Fragment key={name}>
-                <a href={href}>
-                  <Logo
-                    className={
-                      "w-6 h-6 hover:text-primary" +
-                      (fill ? " hover:fill-primary" : "")
-                    }
-                  />
-                </a>
-              </Fragment>
-            ))}
+            <Socials />
           </div>
           <div className="flex flex-col items-center">
             <p>Made by Thomas Bach</p>

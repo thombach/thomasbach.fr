@@ -46,7 +46,7 @@ export const Navigation = (
 ) => {
   return (
     <nav {...props}>
-      <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur">
+      <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-muted-foreground shadow-lg shadow-slate-800/5 ring-1 ring-slate-900/5 backdrop-blur">
         {NavigationItems.map((item) => {
           return (
             <NavItem key={item.name} href={item.href}>

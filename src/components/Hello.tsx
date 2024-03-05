@@ -1,7 +1,6 @@
 import { Mail } from "lucide-react";
 import { Button } from "./ui/button";
-import { socials } from "@/components/Socials";
-import { Fragment } from "react";
+import Socials from "@/components/Socials";
 
 export default function Hello() {
   return (
@@ -13,10 +12,10 @@ export default function Hello() {
           alt="Thomas Bach's profile photo"
         />
         <div className="flex flex-col justify-center text-left">
-          <h1 className="text-5xl font-bold text-zinc-800">
+          <h1 className="text-5xl font-bold text-slate-700">
             Hello, I'm <span className="text-primary">Thomas Bach</span>
           </h1>
-          <h2 className="text-2xl text-slate-400 tracking-tight mt-2">
+          <h2 className="text-2xl text-muted-foreground tracking-tight mt-2">
             💻 Software engineer and DevOps enthusiast
           </h2>
           <div className="flex items-center gap-x-4 mt-4">
@@ -26,22 +25,7 @@ export default function Hello() {
                 Get in touch
               </a>
             </Button>
-            {socials.map(
-              ({ name, href, fill, Logo }) =>
-                name !== "mail" && (
-                  <Fragment key={name}>
-                    <a href={href}>
-                      <Logo
-                        key={name}
-                        className={
-                          "w-6 h-6 hover:text-primary" +
-                          (fill ? " hover:fill-primary" : "")
-                        }
-                      />
-                    </a>
-                  </Fragment>
-                )
-            )}
+            <Socials />
           </div>
         </div>
       </div>
