@@ -2,30 +2,35 @@ import ProjectCard, { ProjectProps } from "./ProjectCard";
 
 const projects: ProjectProps[] = [
   {
+    id: 1,
     name: "Project 1",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatem rem nulla quam iste expedita repudiandae sequi",
     tags: ["React", "AWS", "Spring Boot"],
   },
   {
+    id: 2,
     name: "Project 2",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatem rem nulla quam iste expedita repudiandae sequi",
     tags: ["React", "AWS", "Spring Boot"],
   },
   {
+    id: 3,
     name: "Project 3",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatem rem nulla quam iste expedita repudiandae sequi",
     tags: ["React", "AWS", "Spring Boot"],
   },
   {
+    id: 4,
     name: "Project 4",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatem rem nulla quam iste expedita repudiandae sequi",
     tags: ["React", "AWS", "Spring Boot"],
   },
   {
+    id: 5,
     name: "Project 5",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatem rem nulla quam iste expedita repudiandae sequi",

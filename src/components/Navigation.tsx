@@ -12,7 +12,7 @@ export const NavigationItems = [
   },
   {
     name: "Resume",
-    path: "./CV",
+    path: "./CV.pdf",
   },
 ];
 

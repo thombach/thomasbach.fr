@@ -1,5 +1,4 @@
 import Contact from "@/components/Contact";
-import "./Home.css";
 import Hello from "@/components/Hello";
 import ProjectGrid from "@/components/ProjectGrid";
 import Section from "@/components/Section";

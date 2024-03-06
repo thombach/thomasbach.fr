@@ -1,11 +1,12 @@
-import Section from "@/components/Section";
+import PageTitle from "@/components/PageTitle";
 
 export default function About() {
   return (
     <>
       <div className="flex md:flex-row flex-col mt-32 gap-x-12 gap-y-12 items-center justify-center">
-        <Section title="Hi, I'm Thomas 👋" className="text-base">
-          <p>
+        <div>
+          <PageTitle>Hi, I'm Thomas 👋</PageTitle>
+          <p className="mt-6">
             I'm a full stack developer based in{" "}
             <a
               className="underline underline-offset-4 hover:text-primary"
@@ -32,11 +33,11 @@ export default function About() {
             as long as it interests me. This habit helps me grasp the big
             picture and fulfill the requirements of my projects.
           </p>
-        </Section>
+        </div>
         <img
           src="./src/assets/thomas-mountains.jpg"
           alt="Thomas in the mountains"
-          className="w-72 h-72 rounded-3xl aspect-square"
+          className="size-72 object-cover rounded-3xl aspect-square"
         />
       </div>
     </>

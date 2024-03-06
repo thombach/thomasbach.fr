@@ -7,7 +7,7 @@ export default function Hello() {
     <>
       <div className="flex flex-col sm:flex-row justify-center items-center gap-y-8 gap-x-8 mt-32">
         <img
-          className="w-48 h-48 rounded-3xl aspect-square"
+          className="size-48 object-cover rounded-3xl aspect-square"
           src="profile-photo.jpg"
           alt="Thomas Bach's profile photo"
         />

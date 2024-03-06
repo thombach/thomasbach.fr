@@ -1,0 +1,32 @@
+import PageTitle from "@/components/PageTitle";
+import { ProjectProps } from "@/components/ProjectCard";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useParams } from "react-router-dom";
+
+export default function ProjectDetails() {
+  const { id } = useParams();
+  const project: ProjectProps = {
+    id: 1,
+    name: "Project",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt natus in modi sunt temporibus quasi dolorum, aspernatur, pariatur necessitatibus ad provident ab est amet voluptate. Blanditiis corrupti veritatis odit rem.",
+    tags: ["React", "AWS", "Spring Boot"],
+  };
+  return (
+    <>
+      <div className="mt-32">
+        <PageTitle>{project.name}</PageTitle>
+        <div className="flex gap-x-2 mt-3">
+          {project.tags.map((tag) => (
+            <Badge variant={"secondary"} key={tag}>
+              {tag}
+            </Badge>
+          ))}
+        </div>
+        <Skeleton className="w-full md:w-[32rem] aspect-video object-cover mt-8" />
+        <p className="mt-8">{project.description}</p>
+      </div>
+    </>
+  );
+}
