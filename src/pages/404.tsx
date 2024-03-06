@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <>
       <div className="flex flex-col pt-16 pb-12">
-        <main className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8">
           <div className="py-16">
             <div className="text-center">
               <h1 className="text-4xl font-semibold text-primary">404</h1>
@@ -23,7 +23,7 @@ export default function NotFound() {
               </Button>
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </>
   );

@@ -1,42 +1,38 @@
 import clsx from "clsx";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export const NavigationItems = [
   {
     name: "Home",
-    href: "/",
+    path: "/",
   },
-  // {
-  //   name: "Projects",
-  //   href: "/#projects",
-  // },
   {
     name: "About",
-    href: "/about",
+    path: "/about",
   },
   {
     name: "Resume",
-    href: "./CV",
+    path: "./CV",
   },
 ];
 
 const NavItem = ({
-  href,
+  path,
   children,
-}: React.PropsWithChildren<{ href: string }>) => {
-  const isActive = useLocation().pathname === href;
+}: React.PropsWithChildren<{ path: string }>) => {
+  const isActive = useLocation().pathname === path;
 
   return (
     <li>
-      <a
-        href={href}
+      <Link
+        to={path}
         className={clsx(
           "relative block px-3 py-2 transition",
           isActive ? "text-primary" : "hover:text-primary"
         )}
       >
         {children}
-      </a>
+      </Link>
     </li>
   );
 };
@@ -49,7 +45,7 @@ export const Navigation = (
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-muted-foreground shadow-lg shadow-slate-800/5 ring-1 ring-slate-900/5 backdrop-blur">
         {NavigationItems.map((item) => {
           return (
-            <NavItem key={item.name} href={item.href}>
+            <NavItem key={item.name} path={item.path}>
               {item.name}
             </NavItem>
           );

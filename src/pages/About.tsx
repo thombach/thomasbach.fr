@@ -3,7 +3,7 @@ import Section from "@/components/Section";
 export default function About() {
   return (
     <>
-      <div className="flex md:flex-row flex-col mt-32 gap-x-16 gap-y-16 items-center">
+      <div className="flex md:flex-row flex-col mt-32 gap-x-12 gap-y-12 items-center justify-center">
         <Section title="Hi, I'm Thomas 👋" className="text-base">
           <p>
             I'm a full stack developer based in{" "}
