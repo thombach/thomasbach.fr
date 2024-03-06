@@ -1,8 +1,11 @@
 import PageTitle from "@/components/PageTitle";
 import { ProjectProps } from "@/components/ProjectCard";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 export default function ProjectDetails() {
   const { id } = useParams();
@@ -26,6 +29,12 @@ export default function ProjectDetails() {
         </div>
         <Skeleton className="w-full md:w-[32rem] aspect-video object-cover mt-8" />
         <p className="mt-8">{project.description}</p>
+        <Button variant={"secondary"} asChild className="mt-8">
+          <HashLink smooth to="/#projects">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to projects
+          </HashLink>
+        </Button>
       </div>
     </>
   );
