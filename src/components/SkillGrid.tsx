@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/tooltip";
 import AngularLogo from "@/assets/skills/angular.svg?react";
 import ReactLogo from "@/assets/skills/react.svg?react";
-import JavascriptLogo from "@/assets/skills/javascript.svg?react";
+import TypescriptLogo from "@/assets/skills/typescript.svg?react";
 import CssLogo from "@/assets/skills/css.svg?react";
 import JavaLogo from "@/assets/skills/java.svg?react";
 import SpringBootLogo from "@/assets/skills/spring-boot.svg?react";
@@ -36,8 +36,8 @@ const skills: SkillProps[] = [
     Logo: ReactLogo,
   },
   {
-    name: "Javascript",
-    Logo: JavascriptLogo,
+    name: "Typescript",
+    Logo: TypescriptLogo,
   },
   {
     name: "CSS",

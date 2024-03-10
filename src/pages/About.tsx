@@ -7,7 +7,7 @@ export default function About() {
         <div>
           <PageTitle>Hi, I'm Thomas 👋</PageTitle>
           <p className="mt-6">
-            I'm a full stack developer based in{" "}
+            I'm a full-stack developer based in{" "}
             <a
               className="underline underline-offset-4 hover:text-primary"
               href="https://maps.app.goo.gl/PaH5w7rDeEq1XW7r9"

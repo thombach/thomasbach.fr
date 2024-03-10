@@ -37,16 +37,22 @@ export const socials: SocialProps[] = [
 ];
 
 export default function Socials() {
-  return socials.map(({ name, href, fill, Logo }) => (
-    <Fragment key={name}>
-      <a href={href}>
-        <Logo
-          className={
-            "w-6 h-6 hover:text-primary text-slate-600" +
-            (fill ? " hover:fill-primary fill-slate-600" : "")
-          }
-        />
-      </a>
-    </Fragment>
-  ));
+  return (
+    <>
+      <div className="flex gap-x-4">
+        {socials.map(({ name, href, fill, Logo }) => (
+          <Fragment key={name}>
+            <a href={href}>
+              <Logo
+                className={
+                  "w-6 h-6 hover:text-primary text-slate-600" +
+                  (fill ? " hover:fill-primary fill-slate-600" : "")
+                }
+              />
+            </a>
+          </Fragment>
+        ))}
+      </div>
+    </>
+  );
 }
