@@ -26,27 +26,31 @@ export default function Visitors(props: VisitorsProps) {
   }, []);
   return (
     <>
-      <div className={props.className}>
-        <Popover>
-          <PopoverTrigger>
-            <div className="relative">
-              <Eye className="text-slate-600 ring-offset-background border border-input bg-background rounded-full size-10 text-sm p-2"></Eye>
-              <Badge className="absolute top-0 -right-6 px-1 py-0 hover:bg-primary">
-                {visitorCount}
-              </Badge>
-            </div>
-          </PopoverTrigger>
-          <PopoverContent side="top">
-            <h2
-              className={"mb-1 text-sm font-bold text-slate-700 text-balance"}
-            >
-              <span className="text-primary">{visitorCount}</span> visits on
-              this website
-            </h2>
-            <p className="text-xs">That's is more than {trivia}.</p>
-          </PopoverContent>
-        </Popover>
-      </div>
+      {visitorCount && (
+        <div className={props.className}>
+          <Popover>
+            <PopoverTrigger>
+              <div className="relative">
+                <Eye className="text-slate-600 ring-offset-background border border-input bg-background rounded-full size-10 text-sm p-2"></Eye>
+                <Badge className="absolute top-0 -right-6 px-1 py-0 hover:bg-primary">
+                  {visitorCount}
+                </Badge>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent side="top">
+              <h2
+                className={"mb-1 text-sm font-bold text-slate-700 text-balance"}
+              >
+                <span className="text-primary">{visitorCount}</span> visits on
+                this website
+              </h2>
+              {trivia && (
+                <p className="text-xs">That's is more than {trivia}.</p>
+              )}
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
     </>
   );
 }
