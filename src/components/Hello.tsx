@@ -9,7 +9,7 @@ export default function Hello() {
       <div className="flex flex-col sm:flex-row justify-center items-center gap-y-8 gap-x-10 mt-32">
         <div className="relative">
           <img
-            className="size-48 object-cover rounded-3xl aspect-square"
+            className="size-48 object-cover rounded-2xl aspect-square"
             src="profile-photo.jpg"
             alt="Thomas Bach's profile photo"
           />

@@ -19,13 +19,11 @@ export default function Home() {
       <Section
         className="mt-32"
         title="Skills"
-        intro="Tools, frameworks and languages I use the most in my job or in my personal projects."
+        intro="Tools, frameworks and programming languages I use the most in my job and in my personal projects."
       >
         <SkillGrid />
       </Section>
-      <Section className="mt-32" title="Get in touch" id="contact">
-        <Contact />
-      </Section>
+      <Contact className="mt-32" />
     </>
   );
 }

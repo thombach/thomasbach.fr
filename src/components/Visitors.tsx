@@ -18,12 +18,13 @@ export default function Visitors(props: VisitorsProps) {
   const params = "/trivia?notfound=floor&fragment";
   const [visitorCount, setVisitorCount] = useState<number>(345);
   const [trivia, setTrivia] = useState<String>("");
-  useEffect(() => {
-    http
-      .get<String>(visitorCount + params)
-      .then((response) => setTrivia(response.data))
-      .catch((error) => console.log(error));
-  }, []);
+  // useEffect(() => {
+  //   http
+  //     .get<String>(visitorCount + params)
+  //     .then((response) => setTrivia(response.data))
+  //     .catch((error) => console.log(error));
+  //Je t aime
+  // }, []);
   return (
     <>
       {visitorCount && (
@@ -37,7 +38,7 @@ export default function Visitors(props: VisitorsProps) {
                 </Badge>
               </div>
             </PopoverTrigger>
-            <PopoverContent side="top">
+            <PopoverContent side="top" className="w-72">
               <h2
                 className={"mb-1 text-sm font-bold text-slate-700 text-balance"}
               >
