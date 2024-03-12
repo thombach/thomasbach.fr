@@ -1,11 +1,29 @@
 import PageTitle from "@/components/PageTitle";
+import { motion } from "framer-motion";
 
 export default function About() {
   return (
     <>
-      <div className="flex md:flex-row flex-col mt-32 gap-x-12 gap-y-12 items-center justify-center">
+      <div className="flex md:flex-row flex-col gap-x-12 gap-y-12 items-center justify-center">
         <div>
-          <PageTitle>Hi, I'm Thomas 👋</PageTitle>
+          <PageTitle>
+            Hi, I'm <span className="text-primary">Thomas</span>{" "}
+            <motion.span
+              className="inline-block"
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              transition={{
+                scale: {
+                  type: "spring",
+                  damping: 12,
+                  stiffness: 150,
+                  restDelta: 0.001,
+                },
+              }}
+            >
+              👋
+            </motion.span>
+          </PageTitle>
           <p className="mt-6">
             I'm a full-stack developer based in{" "}
             <a
@@ -34,7 +52,13 @@ export default function About() {
             picture and fulfill the requirements of my projects.
           </p>
         </div>
-        <img
+        <motion.img
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 1,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
           src="./src/assets/thomas-mountains.jpg"
           alt="Thomas in the mountains"
           className="size-72 object-cover rounded-2xl aspect-square"

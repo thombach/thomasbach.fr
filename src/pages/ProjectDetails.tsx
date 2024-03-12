@@ -18,24 +18,22 @@ export default function ProjectDetails() {
   };
   return (
     <>
-      <div className="mt-32">
-        <PageTitle>{project.name}</PageTitle>
-        <div className="flex gap-x-2 mt-3">
-          {project.tags.map((tag) => (
-            <Badge variant={"secondary"} key={tag}>
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        <Skeleton className="w-full md:w-[32rem] aspect-video object-cover mt-8" />
-        <p className="mt-8">{project.description}</p>
-        <Button variant={"secondary"} asChild className="mt-8">
-          <HashLink smooth to="/#projects">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to projects
-          </HashLink>
-        </Button>
+      <PageTitle>{project.name}</PageTitle>
+      <div className="flex gap-x-2 mt-3">
+        {project.tags.map((tag) => (
+          <Badge variant={"secondary"} key={tag}>
+            {tag}
+          </Badge>
+        ))}
       </div>
+      <Skeleton className="w-full md:w-[32rem] aspect-video object-cover mt-8" />
+      <p className="mt-8">{project.description}</p>
+      <Button variant={"secondary"} asChild className="mt-8">
+        <HashLink smooth to="/#projects">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to projects
+        </HashLink>
+      </Button>
     </>
   );
 }
