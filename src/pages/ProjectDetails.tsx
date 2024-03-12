@@ -2,7 +2,7 @@ import PageTitle from "@/components/PageTitle";
 import { ProjectProps } from "@/components/ProjectCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
@@ -26,7 +26,15 @@ export default function ProjectDetails() {
           </Badge>
         ))}
       </div>
-      <Skeleton className="w-full md:w-[32rem] aspect-video object-cover mt-8" />
+      <motion.img
+        className="w-full md:w-[32rem] aspect-video object-cover mt-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 1,
+          ease: "easeOut",
+        }}
+      />
       <p className="mt-8">{project.description}</p>
       <Button variant={"secondary"} asChild className="mt-8">
         <HashLink smooth to="/#projects">

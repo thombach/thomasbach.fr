@@ -57,7 +57,7 @@ export default function About() {
           animate={{ opacity: 1 }}
           transition={{
             duration: 1,
-            ease: [0, 0.71, 0.2, 1.01],
+            ease: "easeOut",
           }}
           src="./src/assets/thomas-mountains.jpg"
           alt="Thomas in the mountains"

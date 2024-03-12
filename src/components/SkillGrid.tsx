@@ -20,6 +20,7 @@ import AwsLogo from "@/assets/skills/aws.svg?react";
 import TerraformLogo from "@/assets/skills/terraform.svg?react";
 import UnityLogo from "@/assets/skills/unity.svg?react";
 import { Fragment } from "react";
+import { motion } from "framer-motion";
 
 interface SkillProps {
   name: string;
@@ -93,18 +94,40 @@ export default function SkillGrid() {
   return (
     <>
       <div className="flex flex-wrap justify-center gap-x-8 gap-y-8">
-        {skills.map(({ name, Logo }) => (
+        {skills.map(({ name, Logo }, i) => (
           <Fragment key={name}>
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Logo className="w-16 h-16 hover:scale-105 transition duration-150 cursor-default" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{name}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <motion.div
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: true, amount: "all" }}
+            >
+              <motion.div
+                variants={{
+                  offscreen: {
+                    opacity: 0,
+                  },
+                  onscreen: {
+                    opacity: 1,
+                    transition: {
+                      duration: 0.2,
+                      delay: i / skills.length,
+                      ease: "easeOut",
+                    },
+                  },
+                }}
+              >
+                <TooltipProvider delayDuration={200}>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Logo className="w-16 h-16 hover:scale-105 transition duration-150 cursor-default" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{name}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </motion.div>
+            </motion.div>
           </Fragment>
         ))}
       </div>
