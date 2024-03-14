@@ -24,7 +24,7 @@ export const socials: SocialProps[] = [
   },
   {
     name: "github",
-    href: "https://github.com/thomasbachdev",
+    href: "https://github.com/thombach",
     fill: false,
     Logo: Github,
   },
