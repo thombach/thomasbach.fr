@@ -1,12 +1,18 @@
-import './App.css'
-import { Button } from './components/ui/button'
+import "./App.css";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import Router from "./components/Router";
 
 function App() {
   return (
     <>
-      <Button>Button</Button>
+      <Header />
+      <main className="sm:mt-32 mt-16">
+        <Router />
+      </main>
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
