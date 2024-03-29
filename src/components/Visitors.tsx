@@ -18,13 +18,12 @@ export default function Visitors(props: VisitorsProps) {
   const params = "/trivia?notfound=floor&fragment";
   const [visitorCount, setVisitorCount] = useState<number>(345);
   const [trivia, setTrivia] = useState<String>("");
-  // useEffect(() => {
-  //   http
-  //     .get<String>(visitorCount + params)
-  //     .then((response) => setTrivia(response.data))
-  //     .catch((error) => console.log(error));
-  //Je t aime
-  // }, []);
+  useEffect(() => {
+    http
+      .get<String>(visitorCount + params)
+      .then((response) => setTrivia(response.data))
+      .catch((error) => console.log(error));
+  }, []);
   return (
     <>
       {visitorCount && (
