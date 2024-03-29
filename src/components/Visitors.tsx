@@ -16,7 +16,7 @@ export default function Visitors(props: VisitorsProps) {
     },
   });
   const params = "/trivia?notfound=floor&fragment";
-  const [visitorCount, setVisitorCount] = useState<number>(345);
+  const [visitorCount] = useState<number>(345);
   const [trivia, setTrivia] = useState<String>("");
   useEffect(() => {
     http

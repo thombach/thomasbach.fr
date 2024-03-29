@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 
 export default function ProjectDetails() {
-  const { id } = useParams();
+  // const { id } = useParams();
   const project: ProjectProps = {
     id: 1,
     name: "Project",

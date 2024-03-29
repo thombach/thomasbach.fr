@@ -1,4 +1,4 @@
-import ProjectCard, { ProjectProps } from "./ProjectCard";
+import { ProjectProps } from "./ProjectCard";
 
 const projects: ProjectProps[] = [];
 
