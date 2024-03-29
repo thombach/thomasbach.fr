@@ -2,7 +2,7 @@ name: S3 and CloudFront sync
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
