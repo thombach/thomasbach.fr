@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Link, useLocation } from "react-router-dom";
+import { Avatar, AvatarImage } from "./ui/avatar";
 
 export const NavigationItems = [
   {
@@ -41,7 +42,13 @@ export const Navigation = (
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
 ) => {
   return (
-    <nav {...props}>
+    <nav {...props} className="flex flex-row">
+      <a href="/">
+        <Avatar className="size-9 left-0 absolute">
+          <AvatarImage src="profile-photo.jpg" />
+        </Avatar>
+      </a>
+
       <ul className="flex rounded-full bg-white/90 px-3 text-sm font-medium text-slate-700 shadow-lg shadow-slate-800/5 ring-1 ring-slate-900/5 backdrop-blur">
         {NavigationItems.map((item) => {
           return (
