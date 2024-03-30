@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import Socials from "@/components/Socials";
 import Visitors from "./Visitors";
 import { motion } from "framer-motion";
+import HelloImage from "@/assets/thomas-sunset.jpeg";
 
 export default function Hello() {
   const job = "Full-stack engineer and DevOps enthusiast".split(" ");
@@ -21,8 +22,8 @@ export default function Hello() {
               },
             }}
             className="size-48 object-cover rounded-2xl aspect-square"
-            src="profile-photo.jpg"
-            alt="Thomas Bach's profile photo"
+            src={HelloImage}
+            alt="Thomas looking a sunset"
           />
           <Visitors className="absolute -top-3 -right-3" />
         </div>

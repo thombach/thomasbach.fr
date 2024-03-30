@@ -8,7 +8,7 @@ interface VisitorsProps {
 }
 
 export default function Visitors(props: VisitorsProps) {
-  const [visitorCount] = useState<number>(56);
+  const [visitorCount] = useState<number>(23);
   function ordinalOf(i: number) {
     let j = i % 10,
       k = i % 100;
@@ -31,7 +31,7 @@ export default function Visitors(props: VisitorsProps) {
             <PopoverTrigger>
               <div className="relative">
                 <Eye className="text-slate-600 ring-offset-background border border-input bg-background rounded-full size-10 text-sm p-2"></Eye>
-                <Badge className="absolute top-0 -right-6 px-1 py-0 hover:bg-primary">
+                <Badge className="absolute top-0 left-8 px-1 py-0 hover:bg-primary">
                   {visitorCount}
                 </Badge>
               </div>
