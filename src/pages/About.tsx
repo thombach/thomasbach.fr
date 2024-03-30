@@ -1,5 +1,6 @@
 import PageTitle from "@/components/PageTitle";
 import { motion } from "framer-motion";
+import AboutImage from "@/assets/thomas-mountains.jpg";
 
 export default function About() {
   return (
@@ -59,7 +60,7 @@ export default function About() {
             duration: 1,
             ease: "easeOut",
           }}
-          src="./src/assets/thomas-mountains.jpg"
+          src={AboutImage}
           alt="Thomas in the mountains"
           className="size-72 object-cover rounded-2xl aspect-square"
         />
