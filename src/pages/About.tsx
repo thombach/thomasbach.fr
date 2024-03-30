@@ -35,9 +35,9 @@ export default function About() {
             </a>{" "}
             I have an engineering degree in computer science from Polytech
             Grenoble. I enjoy programming, making and playing video games,
-            hiking, and volleyball. When I’m not at home building projects with
-            Twitch playing in the background, I'm probably chilling on a
-            mountain with a cup of coffee.
+            hiking, and volleyball. When I’m not in front of my computer
+            building projects, I'm probably chilling on a mountain with a cup of
+            coffee.
           </p>
           <p className="mt-4">
             I started working in full-stack development because it's a field
