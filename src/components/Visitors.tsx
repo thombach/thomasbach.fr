@@ -1,29 +1,28 @@
 import { Eye } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Badge } from "./ui/badge";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 interface VisitorsProps {
   className?: string;
 }
 
 export default function Visitors(props: VisitorsProps) {
-  const http = axios.create({
-    baseURL: "http://numbersapi.com",
-    headers: {
-      "Content-type": "text/plain",
-    },
-  });
-  const params = "/trivia?notfound=floor&fragment";
-  const [visitorCount] = useState<number>(345);
-  const [trivia, setTrivia] = useState<String>("");
-  useEffect(() => {
-    http
-      .get<String>(visitorCount + params)
-      .then((response) => setTrivia(response.data))
-      .catch((error) => console.log(error));
-  }, []);
+  const [visitorCount] = useState<number>(56);
+  function ordinalOf(i: number) {
+    let j = i % 10,
+      k = i % 100;
+    if (j === 1 && k !== 11) {
+      return i + "st";
+    }
+    if (j === 2 && k !== 12) {
+      return i + "nd";
+    }
+    if (j === 3 && k !== 13) {
+      return i + "rd";
+    }
+    return i + "th";
+  }
   return (
     <>
       {visitorCount && (
@@ -41,12 +40,13 @@ export default function Visitors(props: VisitorsProps) {
               <h2
                 className={"mb-1 text-sm font-bold text-slate-700 text-balance"}
               >
-                <span className="text-primary">{visitorCount}</span> visits on
-                this website
+                You are the{" "}
+                <span className="text-primary">{ordinalOf(visitorCount)}</span>{" "}
+                visitor.
               </h2>
-              {trivia && (
-                <p className="text-xs">That's is more than {trivia}.</p>
-              )}
+              <p className="text-sm">
+                Welcome to my website, enjoy your visit !
+              </p>
             </PopoverContent>
           </Popover>
         </div>
