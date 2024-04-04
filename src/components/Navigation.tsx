@@ -43,8 +43,8 @@ export const Navigation = (
 ) => {
   return (
     <nav {...props} className="flex flex-row">
-      <a href="/">
-        <Avatar className="size-9 left-0 absolute">
+      <a href="/" className="hidden sm:block left-0 absolute">
+        <Avatar className="size-9">
           <AvatarImage src="profile-photo.jpg" />
         </Avatar>
       </a>
