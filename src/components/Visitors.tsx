@@ -14,7 +14,6 @@ export default function Visitors(props: VisitorsProps) {
 
   useEffect(() => {
     updateVisitorCount();
-    console.log("test");
   }, []);
 
   const updateVisitorCount = async () => {

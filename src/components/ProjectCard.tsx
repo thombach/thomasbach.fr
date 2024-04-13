@@ -11,10 +11,11 @@ import {
 import { Skeleton } from "./ui/skeleton";
 import { motion } from "framer-motion";
 
-export interface ProjectProps {
+export interface ProjectCardProps {
   id: number;
-  name: string;
+  title: string;
   description: string;
+  date: Date;
   tags: string[];
 }
 
@@ -31,7 +32,7 @@ const variants = {
   },
 };
 
-export default function ProjectCard(props: ProjectProps) {
+export default function ProjectCard(props: ProjectCardProps) {
   return (
     <>
       <motion.div
@@ -43,7 +44,7 @@ export default function ProjectCard(props: ProjectProps) {
           <Link to={"projects/" + props.id}>
             <Card className="hover:bg-accent hover:cursor-pointer">
               <CardHeader>
-                <CardTitle>{props.name}</CardTitle>
+                <CardTitle>{props.title}</CardTitle>
                 <CardDescription>{props.description}</CardDescription>
               </CardHeader>
               <CardContent>

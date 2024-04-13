@@ -1,26 +1,34 @@
-import { ProjectProps } from "./ProjectCard";
-
-const projects: ProjectProps[] = [];
-
-for (let i = 0; i < 7; i++) {
-  projects.push({
-    id: i + 1,
-    name: "Project " + (i + 1),
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores voluptatem rem nulla quam iste expedita repudiandae sequi",
-    tags: ["React", "AWS", "Spring Boot"],
-  });
-}
+import { useEffect, useState } from "react";
+import ProjectCard, { ProjectCardProps } from "./ProjectCard";
+import axios from "axios";
 
 export default function ProjectGrid() {
+  const [projects, setProjects] = useState<ProjectCardProps[]>([]);
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    getAllProjects();
+  }, []);
+
+  const getAllProjects = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/projects`);
+      const projects: ProjectCardProps[] = response.data;
+      setProjects(projects);
+    } catch (error) {
+      console.error("Error fetching projects: ", error);
+    }
+  };
+
   return (
     <>
-      <p>Coming soon...</p>
-      {/* <ul className="grid grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <ProjectCard {...project} key={project.name} />
-        ))}
-      </ul> */}
+      {projects.length && (
+        <ul className="grid grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard {...project} key={project.id} />
+          ))}
+        </ul>
+      )}
     </>
   );
 }
