@@ -1,14 +1,31 @@
 import { Eye } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Badge } from "./ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface VisitorsProps {
   className?: string;
 }
 
 export default function Visitors(props: VisitorsProps) {
-  const [visitorCount] = useState<number>(23);
+  const [visitorCount, setVisitorCount] = useState<number>();
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    updateVisitorCount();
+    console.log("test");
+  }, []);
+
+  const updateVisitorCount = async () => {
+    try {
+      const result = await axios.post(`${API_URL}/visitors`);
+      setVisitorCount(result.data);
+    } catch (error) {
+      console.error("Error fetching visitor count: ", error);
+    }
+  };
+
   function ordinalOf(i: number) {
     let j = i % 10,
       k = i % 100;
@@ -23,6 +40,7 @@ export default function Visitors(props: VisitorsProps) {
     }
     return i + "th";
   }
+
   return (
     <>
       {visitorCount && (
