@@ -13,13 +13,21 @@ export default function Visitors(props: VisitorsProps) {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    updateVisitorCount();
+    let visitorCountStored = sessionStorage.getItem("visitorCount");
+    if (visitorCountStored) {
+      setVisitorCount(+visitorCountStored);
+    } else {
+      updateVisitorCount();
+    }
   }, []);
 
   const updateVisitorCount = async () => {
     try {
       const result = await axios.post(`${API_URL}/visitors`);
-      setVisitorCount(result.data);
+      if (result.data) {
+        setVisitorCount(result.data);
+        sessionStorage.setItem("visitorCount", result.data.toString());
+      }
     } catch (error) {
       console.error("Error fetching visitor count: ", error);
     }

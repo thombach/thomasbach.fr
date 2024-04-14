@@ -1,6 +1,7 @@
 import PageTitle from "@/components/PageTitle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -18,6 +19,7 @@ export interface ProjectDetailsProps {
 export default function ProjectDetails() {
   const { id } = useParams();
   const [project, setProject] = useState<ProjectDetailsProps>();
+  const [loading, setLoading] = useState<Boolean>(true);
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -31,11 +33,13 @@ export default function ProjectDetails() {
       setProject(project);
     } catch (error) {
       console.error("Error fetching project details: ", error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <>
-      {project && (
+      {!loading && project ? (
         <div>
           <PageTitle>{project.title}</PageTitle>
           <div className="flex gap-x-2 mt-3">
@@ -55,14 +59,25 @@ export default function ProjectDetails() {
             }}
           />
           <p className="mt-8">{project.content}</p>
-          <Button variant={"secondary"} asChild className="mt-8">
-            <HashLink smooth to="/#projects">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to projects
-            </HashLink>
-          </Button>
+        </div>
+      ) : (
+        <div>
+          <Skeleton className="h-[48px] w-[400px] rounded-xl" />
+          <Skeleton className="w-full md:w-[32rem] aspect-video object-cover mt-8 rounded-xl" />
+          <div className="flex-col space-y-2 mt-8">
+            {Array.from(Array(6), (_, index) => (
+              <Skeleton className="h-[16px] w-full" key={index} />
+            ))}
+            <Skeleton className="h-[16px] w-[200px]" />
+          </div>
         </div>
       )}
+      <Button variant={"secondary"} asChild className="mt-8">
+        <HashLink smooth to="/#projects">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to projects
+        </HashLink>
+      </Button>
     </>
   );
 }

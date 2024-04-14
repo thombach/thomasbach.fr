@@ -37,7 +37,7 @@ const skills: SkillProps[] = [
     Logo: ReactLogo,
   },
   {
-    name: "Typescript",
+    name: "TypeScript",
     Logo: TypescriptLogo,
   },
   {
