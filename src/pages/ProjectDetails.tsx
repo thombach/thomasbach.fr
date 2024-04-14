@@ -14,6 +14,8 @@ export interface ProjectDetailsProps {
   title: string;
   content: string;
   tags: string[];
+  s3Url: string;
+  videoUrl: string;
 }
 
 export default function ProjectDetails() {
@@ -49,15 +51,26 @@ export default function ProjectDetails() {
               </Badge>
             ))}
           </div>
-          <motion.img
-            className="w-full md:w-[32rem] aspect-video object-cover mt-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: 1,
-              ease: "easeOut",
-            }}
-          />
+          {project.videoUrl ? (
+            <iframe
+              className="w-full lg:w-[48rem] aspect-video object-cover mt-8"
+              src={project.videoUrl}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          ) : (
+            <motion.img
+              className="w-full lg:w-[48rem] aspect-video object-cover mt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                duration: 1,
+                ease: "easeOut",
+              }}
+              src={project.s3Url}
+            />
+          )}
+
           <p className="mt-8">{project.content}</p>
         </div>
       ) : (

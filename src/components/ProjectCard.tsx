@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Skeleton } from "./ui/skeleton";
 
 export interface ProjectCardProps {
   id: number;
@@ -16,6 +15,7 @@ export interface ProjectCardProps {
   description: string;
   completionDate: Date;
   tags: string[];
+  s3Url: string;
 }
 
 export default function ProjectCard(props: ProjectCardProps) {
@@ -28,7 +28,7 @@ export default function ProjectCard(props: ProjectCardProps) {
           </CardHeader>
           <CardContent>
             <CardDescription>{props.description}</CardDescription>
-            <Skeleton className="aspect-video mt-4" />
+            <img className="aspect-video mt-4" src={props.s3Url} />
           </CardContent>
           <CardFooter className="flex flex-wrap gap-x-2 gap-y-2">
             {props.tags.map((tag) => (
