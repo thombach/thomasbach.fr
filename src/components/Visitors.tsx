@@ -56,7 +56,7 @@ export default function Visitors(props: VisitorsProps) {
             <PopoverTrigger>
               <div className="relative">
                 <Eye className="text-slate-600 ring-offset-background border border-input bg-background rounded-full size-10 text-sm p-2"></Eye>
-                <Badge className="absolute top-0 left-8 px-1 py-0 hover:bg-primary">
+                <Badge className="absolute top-0 left-8 px-1 py-0 hover:bg-primary font-sans">
                   {visitorCount}
                 </Badge>
               </div>
@@ -66,12 +66,14 @@ export default function Visitors(props: VisitorsProps) {
                 className={"mb-1 text-sm font-bold text-slate-700 text-balance"}
               >
                 You are the{" "}
-                <span className="text-primary">{ordinalOf(visitorCount)}</span>{" "}
+                <span className="text-primary font-sans">
+                  {ordinalOf(visitorCount)}
+                </span>{" "}
                 visitor.
               </h2>
-              <p className="text-sm">
+              <span className="text-sm">
                 Welcome to my website, enjoy your visit !
-              </p>
+              </span>
             </PopoverContent>
           </Popover>
         </div>

@@ -122,7 +122,7 @@ export default function SkillGrid() {
                       <Logo className="w-16 h-16 hover:scale-105 transition duration-150 cursor-default" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{name}</p>
+                      <span>{name}</span>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
