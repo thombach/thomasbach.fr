@@ -8,58 +8,37 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Skeleton } from "./ui/skeleton";
-import { motion } from "framer-motion";
 
-export interface ProjectProps {
+export interface ProjectCardProps {
   id: number;
-  name: string;
+  title: string;
   description: string;
+  completionDate: Date;
   tags: string[];
+  s3Url: string;
 }
 
-const variants = {
-  offscreen: {
-    y: 500,
-  },
-  onscreen: {
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: "easeOut",
-    },
-  },
-};
-
-export default function ProjectCard(props: ProjectProps) {
+export default function ProjectCard(props: ProjectCardProps) {
   return (
     <>
-      <motion.div
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true, amount: 0.5 }}
-      >
-        <motion.div variants={variants}>
-          <Link to={"projects/" + props.id}>
-            <Card className="hover:bg-accent hover:cursor-pointer">
-              <CardHeader>
-                <CardTitle>{props.name}</CardTitle>
-                <CardDescription>{props.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="aspect-video" />
-              </CardContent>
-              <CardFooter className="flex gap-x-2">
-                {props.tags.map((tag) => (
-                  <Badge variant={"secondary"} key={tag}>
-                    {tag}
-                  </Badge>
-                ))}
-              </CardFooter>
-            </Card>
-          </Link>
-        </motion.div>
-      </motion.div>
+      <Link to={"projects/" + props.id}>
+        <Card className="hover:bg-accent hover:cursor-pointer">
+          <CardHeader>
+            <CardTitle>{props.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>{props.description}</CardDescription>
+            <img className="aspect-video mt-4" src={props.s3Url} />
+          </CardContent>
+          <CardFooter className="flex flex-wrap gap-x-2 gap-y-2">
+            {props.tags.map((tag) => (
+              <Badge variant={"secondary"} key={tag}>
+                {tag}
+              </Badge>
+            ))}
+          </CardFooter>
+        </Card>
+      </Link>
     </>
   );
 }

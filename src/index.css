@@ -81,4 +81,5 @@
   p, span {
     @apply font-atkinson;
   }
+  p {@apply mb-4}
 }

@@ -39,7 +39,7 @@ export default function About() {
             building projects, I'm probably chilling on a mountain with a cup of
             coffee.
           </p>
-          <p className="mt-4">
+          <p>
             I started working in full-stack development because it's a field
             that offers diverse projects combining creativity and technical
             skills. I enjoy building tools that will make people's lives easier
@@ -47,7 +47,7 @@ export default function About() {
             automation and designing suitable architecture are the keys. That's
             why DevOps and Cloud technologies also interest me greatly.
           </p>
-          <p className="mt-4">
+          <p>
             I've always enjoyed learning new things, regardless of the subject,
             as long as it interests me. This habit helps me grasp the big
             picture and fulfill the requirements of my projects.
