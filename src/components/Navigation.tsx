@@ -11,10 +11,6 @@ export const NavigationItems = [
     name: "About",
     path: "/about",
   },
-  {
-    name: "Resume",
-    path: "./CV.pdf",
-  },
 ];
 
 const NavItem = ({
@@ -57,6 +53,12 @@ export const Navigation = (
             </NavItem>
           );
         })}
+        <a
+          href="CV-BACH.pdf"
+          className={"relative block px-3 py-2 transition hover:text-primary"}
+        >
+          Resume
+        </a>
       </ul>
     </nav>
   );
