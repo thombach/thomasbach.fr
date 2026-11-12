@@ -1,0 +1,119 @@
+/* Design system "Carnet": a hiking notebook. White paper, navy ink, the red of
+   GR trail marks, serif titles, and a framed extract of a contour map. */
+:root {
+  --paper: #ffffff; /* background */
+  --ink: #15233a; /* text, map frame */
+  --muted: #5b6676; /* secondary text, years */
+  --line: #d3dce7; /* contour lines, row separators */
+  --line-index: #a7b6c9; /* every 5th contour, as on IGN maps */
+  --accent: #c42a1f; /* GR trail red: links */
+  --surface: #f2f5f8; /* image placeholders */
+  --relief-shadow: 21 35 58; /* hillshade shadows, as "r g b" */
+  --relief-light: 255 255 255; /* hillshade sunlit slopes */
+  --water: #4a86c0; /* lake outlines */
+  --lake: #cfe2f3; /* lake fill */
+  --glacier: rgb(220 235 249 / 0.5); /* glacier fill, light enough to read the contours */
+  --glacier-edge: #c3d8ec;
+  --grid: #f0f3f7; /* kilometre grid behind the header */
+  --duo: #15233a; /* project images: two-tone until hovered */
+
+  --display: "Newsreader Variable", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans Variable", "Helvetica Neue", Arial, sans-serif;
+  --measure: 62ch;
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.625rem;
+  --step-3: 2.25rem;
+  --step-hero: clamp(3rem, 8vw, 5.75rem);
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(20px, env(safe-area-inset-right, 0px));
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.icon {
+  flex: none;
+}
+
+.wrap {
+  max-width: 980px;
+  margin-inline: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter-r);
+}
+
+.section-title {
+  font-size: var(--step-3);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  background: var(--paper);
+  padding: 8px 12px;
+  z-index: 10;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

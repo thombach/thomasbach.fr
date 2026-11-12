@@ -1,0 +1,24 @@
+---
+import Base from "@/layouts/Base.astro";
+import { ui } from "@/i18n";
+
+const en = ui.en;
+const fr = ui.fr;
+---
+
+<Base lang="en" title={en.notFoundTitle} description={en.notFoundText} alternates={false}>
+  <main class="wrap notfound">
+    <h1 class="section-title">{en.notFoundTitle}</h1>
+    <p>{en.notFoundText} <a href="/">{en.backHome}</a></p>
+    <p lang="fr">{fr.notFoundText} <a href="/fr/">{fr.backHome}</a></p>
+  </main>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: 120px;
+  }
+  .notfound p {
+    margin: 18px 0 0;
+  }
+</style>
