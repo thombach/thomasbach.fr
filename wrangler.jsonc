@@ -7,5 +7,7 @@
     "directory": "./dist",
     // Serve 404.html with a 404 status for unknown paths. Directory URLs (/fr/) resolve to index.html by default.
     "not_found_handling": "404-page"
-  }
+  },
+  // Cloudflare creates and manages the DNS record for this hostname.
+  "routes": [{ "pattern": "thomasbach.fr", "custom_domain": true }]
 }
