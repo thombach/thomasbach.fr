@@ -1,0 +1,12 @@
+# Response headers for Cloudflare Workers static assets.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Hashed build assets never change: cache them for a year.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Terrain files keep their names across deploys: a day of cache, then revalidation.
+/terrain/*
+  Cache-Control: public, max-age=86400

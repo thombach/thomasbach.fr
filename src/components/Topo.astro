@@ -1,0 +1,607 @@
+---
+// Framed contour map of a real French summit, picked at random on each visit.
+// Contours rise level by level on load over a hillshade lit from the north-west
+// (the cartographic convention), with lakes and glaciers in blue; hovering shows
+// the altitude under the pointer.
+import Icon from "@/components/Icon.astro";
+import { ui, type Lang } from "@/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const strings = {
+  fallback: t.mapCaption,
+  north: t.north,
+  south: t.south,
+  east: t.east,
+  west: t.west,
+};
+---
+
+<figure class="mapbox" data-lang={lang} data-strings={JSON.stringify(strings)}>
+  <div class="map">
+    <canvas aria-hidden="true"></canvas>
+    <div class="readout" aria-hidden="true" hidden><span></span></div>
+  </div>
+  <figcaption>
+    <div class="cap-top">
+      <span class="cap-name"></span>
+      <span class="scale" hidden><i></i><span></span></span>
+    </div>
+    <p class="cap-meta"></p>
+    <button class="next" type="button" hidden>
+      <Icon name="refresh" size={14} />
+      {t.nextSummit}
+    </button>
+  </figcaption>
+</figure>
+
+<style>
+  .mapbox {
+    margin: 0;
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .map {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--ink);
+    overflow: hidden;
+    cursor: crosshair;
+  }
+
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Altitude under the pointer: a dot and a small label, like a GPS readout. */
+  .readout {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+  }
+
+  .readout::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px var(--paper);
+  }
+
+  .readout span {
+    position: absolute;
+    left: 10px;
+    top: -26px;
+    padding: 2px 6px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .readout.flip span {
+    left: auto;
+    right: 10px;
+  }
+
+  figcaption {
+    display: grid;
+    gap: 2px;
+    min-height: 3.2em;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .cap-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .cap-name {
+    font-family: var(--display);
+    font-size: 1.0625rem;
+    color: var(--ink);
+  }
+
+  .cap-meta {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Small text button under the caption: cycles through the summits. */
+  .next {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 4px 10px;
+    font: inherit;
+    font-size: 0.8125rem;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line-index);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  .next:hover {
+    border-color: var(--ink);
+  }
+
+  .next[hidden] {
+    display: none;
+  }
+
+  .next:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  .scale {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scale[hidden] {
+    display: none;
+  }
+
+  /* Alternating dark and light halves, like a map scale bar. */
+  .scale i {
+    height: 6px;
+    border: 1px solid var(--ink);
+    background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
+  }
+
+  @media (max-width: 720px) {
+    .map {
+      aspect-ratio: 3 / 2;
+    }
+  }
+</style>
+
+<script>
+  import summits from "@/data/summits.json";
+
+  type Summit = (typeof summits)[number];
+  /** Rings of [east, north] metres from the map centre. */
+  type Shapes = { lakes: number[][][][]; glaciers: number[][][][] };
+  type Strings = { fallback: string; north: string; south: string; east: string; west: string };
+
+  // Set to false to remove the hillshade under the contours.
+  const SHADING = true;
+
+  const figure = document.querySelector<HTMLElement>(".mapbox");
+  const box = figure?.querySelector<HTMLElement>(".map");
+  const canvas = box?.querySelector("canvas");
+  const ctx = canvas?.getContext("2d");
+
+  if (figure && box && canvas && ctx) {
+    const lang = figure.dataset.lang ?? "en";
+    const t: Strings = JSON.parse(figure.dataset.strings ?? "{}");
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const meters = new Intl.NumberFormat(lang, { maximumFractionDigits: 0 });
+    const degrees = new Intl.NumberFormat(lang, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    const $ = (sel: string) => figure.querySelector<HTMLElement>(sel)!;
+    const hero = figure.closest<HTMLElement>("header");
+
+    /** Elevation grid in metres, row-major from the north-west corner. */
+    interface Terrain {
+      cols: number;
+      rows: number;
+      widthM: number;
+      heightM: number;
+      z: Float32Array;
+      summit?: Summit;
+    }
+
+    let terrain: Terrain | null = null;
+    let width = 0;
+    let height = 0;
+    let mPerPx = 1; // metres per CSS pixel on screen
+    let progress = reduceMotion ? 1 : 0;
+    let shade: HTMLCanvasElement | null = null;
+    let water: Shapes = { lakes: [], glaciers: [] };
+
+    /** Elevation at a point given in metres from the map centre (east, north). */
+    const elevationAt = (east: number, north: number) => {
+      if (!terrain) return 0;
+      const cell = terrain.widthM / terrain.cols;
+      const x = Math.min(terrain.cols - 1.001, Math.max(0, (east + terrain.widthM / 2) / cell - 0.5));
+      const y = Math.min(terrain.rows - 1.001, Math.max(0, (terrain.heightM / 2 - north) / cell - 0.5));
+      const xi = Math.floor(x);
+      const yi = Math.floor(y);
+      const fx = x - xi;
+      const fy = y - yi;
+      const z = terrain.z;
+      const c = terrain.cols;
+      return (
+        z[yi * c + xi] * (1 - fx) * (1 - fy) +
+        z[yi * c + xi + 1] * fx * (1 - fy) +
+        z[(yi + 1) * c + xi] * (1 - fx) * fy +
+        z[(yi + 1) * c + xi + 1] * fx * fy
+      );
+    };
+
+    /** Screen pixel to metres from the centre: the data covers the box like object-fit: cover. */
+    const toMeters = (px: number, py: number) => [(px - width / 2) * mPerPx, (height / 2 - py) * mPerPx];
+    const toPixels = (east: number, north: number) => [width / 2 + east / mPerPx, height / 2 - north / mPerPx];
+
+    const layout = () => {
+      const rect = box.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (terrain) mPerPx = Math.min(terrain.widthM / width, terrain.heightM / height);
+      updateScale();
+      alignGrid();
+    };
+
+    // ---------- Kilometre grid behind the header ----------
+    // One square per kilometre at the map's scale, with the summit in the middle of a square.
+    const alignGrid = () => {
+      if (!hero || !terrain?.summit || !width) return;
+      const step = 1000 / mPerPx;
+      const h = hero.getBoundingClientRect();
+      const b = box.getBoundingClientRect();
+      const cx = b.left - h.left + width / 2 - step / 2;
+      const cy = b.top - h.top + height / 2 - step / 2;
+      hero.style.setProperty("--grid-step", `${step}px`);
+      hero.style.setProperty("--grid-x", `${((cx % step) + step) % step}px`);
+      hero.style.setProperty("--grid-y", `${((cy % step) + step) % step}px`);
+    };
+
+    // ---------- Hillshade ----------
+    const buildShade = () => {
+      if (!terrain) return;
+      // Light from the north-west, 45° high, as on most topographic maps.
+      const rad = Math.PI / 180;
+      const az = 315 * rad;
+      const el = 45 * rad;
+      const lx = Math.sin(az) * Math.cos(el);
+      const ly = Math.cos(az) * Math.cos(el);
+      const lz = Math.sin(el);
+
+      const { cols, rows, z, widthM } = terrain;
+      const cell = widthM / cols;
+      const exaggeration = 1.2;
+      const css = getComputedStyle(box);
+      const shadowRgb = css.getPropertyValue("--relief-shadow").trim().split(/\s+/).map(Number);
+      const lightRgb = css.getPropertyValue("--relief-light").trim().split(/\s+/).map(Number);
+
+      const off = document.createElement("canvas");
+      off.width = cols;
+      off.height = rows;
+      const octx = off.getContext("2d")!;
+      const img = octx.createImageData(cols, rows);
+      for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+          const zl = z[j * cols + Math.max(0, i - 1)];
+          const zr = z[j * cols + Math.min(cols - 1, i + 1)];
+          const zu = z[Math.max(0, j - 1) * cols + i];
+          const zd = z[Math.min(rows - 1, j + 1) * cols + i];
+          const dzdx = ((zr - zl) / (2 * cell)) * exaggeration; // towards east
+          const dzdy = ((zu - zd) / (2 * cell)) * exaggeration; // towards north
+          const norm = Math.hypot(dzdx, dzdy, 1);
+          const lit = (-dzdx * lx - dzdy * ly + lz) / norm;
+          const delta = lit - lz; // relative to flat ground
+          const k = (j * cols + i) * 4;
+          const rgb = delta < 0 ? shadowRgb : lightRgb;
+          img.data[k] = rgb[0];
+          img.data[k + 1] = rgb[1];
+          img.data[k + 2] = rgb[2];
+          img.data[k + 3] = Math.min(255, Math.abs(delta) * (delta < 0 ? 120 : 80));
+        }
+      }
+      octx.putImageData(img, 0, 0);
+      shade = off;
+    };
+
+    const css = () => getComputedStyle(box);
+
+    // ---------- Lakes and glaciers ----------
+    const drawWater = () => {
+      const style = css();
+      const paint = (features: number[][][][], fill: string, stroke: string) => {
+        for (const rings of features) {
+          ctx.beginPath();
+          for (const ring of rings) {
+            ring.forEach(([e, n], i) => {
+              const [x, y] = toPixels(e, n);
+              if (i === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+          }
+          ctx.fillStyle = fill;
+          ctx.fill("evenodd");
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      };
+      ctx.globalAlpha = progress;
+      paint(water.glaciers, style.getPropertyValue("--glacier").trim(), style.getPropertyValue("--glacier-edge").trim());
+      paint(water.lakes, style.getPropertyValue("--lake").trim(), style.getPropertyValue("--water").trim());
+      ctx.globalAlpha = 1;
+    };
+
+    // ---------- Contours ----------
+    const draw = () => {
+      if (!terrain || !width) return;
+      ctx.clearRect(0, 0, width, height);
+
+      if (shade) {
+        // Source rectangle of the shading image that is visible in the box.
+        const cell = terrain.widthM / terrain.cols;
+        const sw = (width * mPerPx) / cell;
+        const sh = (height * mPerPx) / cell;
+        ctx.globalAlpha = progress;
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(shade, (terrain.cols - sw) / 2, (terrain.rows - sh) / 2, sw, sh, 0, 0, width, height);
+        ctx.globalAlpha = 1;
+      }
+      drawWater();
+
+      const cellPx = Math.max(3, width / 140);
+      const cols = Math.ceil(width / cellPx) + 1;
+      const rows = Math.ceil(height / cellPx) + 1;
+      const grid = new Float32Array(cols * rows);
+      let min = Infinity;
+      let max = -Infinity;
+      for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+          const [e, n] = toMeters(i * cellPx, j * cellPx);
+          const v = elevationAt(e, n);
+          grid[j * cols + i] = v;
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+      }
+
+      const interval = terrain.summit?.interval ?? 0.05;
+      const first = Math.ceil(min / interval);
+      const last = Math.floor(max / interval);
+      const count = last - first + 1;
+      const shown = progress * count;
+      const style = css();
+      const line = style.getPropertyValue("--line").trim();
+      const indexLine = style.getPropertyValue("--line-index").trim();
+
+      for (let k = first; k <= last; k++) {
+        const alpha = Math.max(0, Math.min(1, shown - (k - first)));
+        if (!alpha) break;
+        const level = k * interval;
+        ctx.beginPath();
+        for (let j = 0; j < rows - 1; j++) {
+          for (let i = 0; i < cols - 1; i++) {
+            const a = grid[j * cols + i];
+            const b = grid[j * cols + i + 1];
+            const c = grid[(j + 1) * cols + i + 1];
+            const d = grid[(j + 1) * cols + i];
+            const code =
+              (Number(a > level) << 3) | (Number(b > level) << 2) | (Number(c > level) << 1) | Number(d > level);
+            if (code === 0 || code === 15) continue;
+            const x = i * cellPx;
+            const y = j * cellPx;
+            const f = (p: number, q: number) => (level - p) / (q - p);
+            const top: [number, number] = [x + cellPx * f(a, b), y];
+            const right: [number, number] = [x + cellPx, y + cellPx * f(b, c)];
+            const bottom: [number, number] = [x + cellPx * f(d, c), y + cellPx];
+            const left: [number, number] = [x, y + cellPx * f(a, d)];
+            const seg = (p: [number, number], q: [number, number]) => {
+              ctx.moveTo(p[0], p[1]);
+              ctx.lineTo(q[0], q[1]);
+            };
+            switch (code) {
+              case 1: case 14: seg(left, bottom); break;
+              case 2: case 13: seg(bottom, right); break;
+              case 3: case 12: seg(left, right); break;
+              case 4: case 11: seg(top, right); break;
+              case 6: case 9: seg(top, bottom); break;
+              case 7: case 8: seg(left, top); break;
+              case 5: seg(left, top); seg(bottom, right); break;
+              case 10: seg(top, right); seg(left, bottom); break;
+            }
+          }
+        }
+        // Index contours every 5 intervals, as on IGN maps.
+        const isIndex = k % 5 === 0;
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = isIndex ? indexLine : line;
+        ctx.lineWidth = isIndex ? 1.5 : 0.8;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      // Summit triangle once the relief is drawn.
+      if (progress >= 1 && terrain.summit) {
+        const x = width / 2;
+        const y = height / 2;
+        ctx.fillStyle = style.getPropertyValue("--ink").trim();
+        ctx.beginPath();
+        ctx.moveTo(x, y - 6);
+        ctx.lineTo(x + 6, y + 5);
+        ctx.lineTo(x - 6, y + 5);
+        ctx.closePath();
+        ctx.fill();
+      }
+    };
+
+    let generation = 0;
+    const animate = () => {
+      const run = ++generation;
+      if (reduceMotion) {
+        progress = 1;
+        draw();
+        return;
+      }
+      progress = 0;
+      const t0 = performance.now();
+      const tick = (time: number) => {
+        if (run !== generation) return; // a newer summit took over
+        const p = Math.min(1, (time - t0) / 1600);
+        progress = 1 - (1 - p) ** 2;
+        draw();
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    // ---------- Caption, scale and locator map ----------
+    const updateScale = () => {
+      if (!terrain?.summit || !width) return;
+      // Longest round distance that fits in ~90 px.
+      const m = [100, 200, 250, 500, 1000, 2000].filter((d) => d / mPerPx <= 90).pop() ?? 100;
+      const scale = $(".scale");
+      scale.hidden = false;
+      scale.querySelector("i")!.style.width = `${m / mPerPx}px`;
+      scale.querySelector("span")!.textContent = m >= 1000 ? `${m / 1000} km` : `${m} m`;
+    };
+
+    const fillCaption = (s: Summit) => {
+      const name = s.name[lang as "en" | "fr"];
+      const massif = s.massif?.[lang as "en" | "fr"];
+      $(".cap-name").textContent = massif ? `${name}, ${massif}` : name;
+      const lat = `${degrees.format(Math.abs(s.lat))}° ${s.lat >= 0 ? t.north : t.south}`;
+      const lon = `${degrees.format(Math.abs(s.lon))}° ${s.lon >= 0 ? t.east : t.west}`;
+      $(".cap-meta").textContent = `${meters.format(s.altitude)} m, ${lat} ${lon}`;
+    };
+
+    // ---------- Altitude readout ----------
+    const readout = box.querySelector<HTMLElement>(".readout")!;
+    const label = readout.querySelector("span")!;
+    let hideTimer: number | undefined;
+    const showReadout = (e: PointerEvent) => {
+      if (!terrain?.summit) return;
+      const rect = box.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const [east, north] = toMeters(x, y);
+      label.textContent = `${meters.format(elevationAt(east, north))} m`;
+      readout.style.transform = `translate(${x}px, ${y}px)`;
+      readout.classList.toggle("flip", x > width - 90);
+      readout.hidden = false;
+      clearTimeout(hideTimer);
+      if (e.pointerType !== "mouse") hideTimer = window.setTimeout(() => (readout.hidden = true), 2500);
+    };
+    box.addEventListener("pointermove", showReadout);
+    box.addEventListener("pointerdown", showReadout);
+    box.addEventListener("pointerleave", (e) => {
+      if (e.pointerType === "mouse") readout.hidden = true;
+    });
+
+    // ---------- Fallback: generated hills if the data cannot load ----------
+    const generated = (): Terrain => {
+      const cols = 120;
+      const rows = 150;
+      let seed = Math.floor(Math.random() * 1e9);
+      const rnd = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+      const hills = Array.from({ length: 5 }, () => ({
+        x: 0.1 + rnd() * 0.8,
+        y: rnd(),
+        h: 0.5 + rnd() * 0.6,
+        s: 0.14 + rnd() * 0.16,
+      }));
+      const z = new Float32Array(cols * rows);
+      for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+          let v = 0;
+          for (const h of hills) {
+            const dx = (i / cols - h.x) * 0.8;
+            const dy = j / rows - h.y;
+            v += h.h * Math.exp(-(dx * dx + dy * dy) / (2 * h.s * h.s));
+          }
+          z[j * cols + i] = v;
+        }
+      }
+      return { cols, rows, widthM: cols, heightM: rows, z };
+    };
+
+    // ---------- Start ----------
+    const nextButton = figure.querySelector<HTMLButtonElement>("button.next")!;
+    let current = -1;
+
+    const load = async (index: number) => {
+      const summit = summits[index];
+      nextButton.disabled = true;
+      try {
+        const [res, shapes] = await Promise.all([
+          fetch(`/terrain/${summit.id}.bin`),
+          // Lakes and glaciers are a bonus: the map works without them.
+          fetch(`/terrain/${summit.id}.json`).then((r) => (r.ok ? r.json() : null), () => null),
+        ]);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const raw = new Uint16Array(await res.arrayBuffer());
+        water = shapes ?? { lakes: [], glaciers: [] };
+        const z = new Float32Array(raw.length);
+        for (let i = 0; i < raw.length; i++) z[i] = raw[i] / 10; // stored in decimetres
+        terrain = { cols: summit.cols, rows: summit.rows, widthM: summit.widthM, heightM: summit.heightM, z, summit };
+        current = index;
+        readout.hidden = true;
+        fillCaption(summit);
+        if (SHADING) buildShade();
+        nextButton.hidden = false;
+      } catch {
+        if (current >= 0) return; // keep the summit already shown
+        terrain = generated();
+        shade = null;
+        water = { lakes: [], glaciers: [] };
+        $(".cap-name").textContent = t.fallback;
+        box.style.cursor = "default";
+      } finally {
+        nextButton.disabled = false;
+      }
+      layout();
+      animate();
+    };
+
+    nextButton.addEventListener("click", () => load((current + 1) % summits.length));
+
+    // "?summit=mont-blanc" forces a summit, handy to check each one.
+    const forced = summits.findIndex((s) => s.id === new URLSearchParams(location.search).get("summit"));
+    load(forced >= 0 ? forced : Math.floor(Math.random() * summits.length));
+
+    // Canvas text needs the web fonts: redraw once they are ready.
+    document.fonts.ready.then(() => progress >= 1 && draw());
+
+    let lastWidth = 0;
+    let resizeTimer: number | undefined;
+    window.addEventListener("resize", () => {
+      // Mobile browsers fire resize when the URL bar hides: only redraw on width changes.
+      const w = box.getBoundingClientRect().width;
+      if (w === lastWidth) return;
+      lastWidth = w;
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        layout();
+        draw();
+      }, 150);
+    });
+  }
+</script>

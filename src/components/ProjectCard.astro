@@ -1,0 +1,247 @@
+---
+import { Image } from "astro:assets";
+import Icon from "@/components/Icon.astro";
+import type { Project } from "@/lib/projects";
+
+interface Props {
+  project: Project;
+  /** Load the first images eagerly, they are close to the fold. */
+  eager?: boolean;
+}
+
+const { project, eager = false } = Astro.props;
+const { title, year, date, description, cover, coverAlt, video, link } = project;
+const Tag = link ? "a" : "div";
+---
+
+<li class="project" data-video={video ? "" : undefined}>
+  <Tag class="card" href={link?.href} rel={link ? "noopener" : undefined}>
+    <div class="media">
+      <Image
+        class="shot"
+        src={cover}
+        alt={coverAlt}
+        width={720}
+        widths={[360, 540, 720]}
+        sizes="(min-width: 720px) 220px, calc(100vw - 40px)"
+        format="webp"
+        loading={eager ? "eager" : "lazy"}
+      />
+      {
+        video && (
+          <video class="shot clip" src={video} muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" />
+        )
+      }
+    </div>
+    <h3>{title}</h3>
+    <time datetime={date.toISOString().slice(0, 10)}>{year}</time>
+    <p>{description}</p>
+    {
+      link && (
+        <span class="dest">
+          <Icon name={link.icon} size={16} />
+          <span>{link.label}</span>
+        </span>
+      )
+    }
+  </Tag>
+</li>
+
+<style>
+  .project {
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Row: image | title, text, link | year */
+  .card {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) auto;
+    column-gap: 28px;
+    row-gap: 8px;
+    align-items: start;
+    align-content: start;
+    padding-block: 24px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .media {
+    grid-row: 1 / span 3;
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--surface);
+    outline: 1px solid var(--line);
+    outline-offset: -1px;
+  }
+
+  .shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .clip {
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .clip.playing {
+    opacity: 1;
+  }
+
+  /* Two-tone images, like photos glued in a notebook; real colours on hover.
+     Touch screens have no hover, so they always get the real colours. */
+  @media (hover: hover) {
+    .shot {
+      filter: grayscale(1) contrast(1.05);
+      transition: filter 0.3s ease;
+    }
+    .media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: var(--duo);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .project:hover .shot,
+    .card:focus-visible .shot {
+      filter: none;
+    }
+    .project:hover .media::after,
+    .card:focus-visible .media::after {
+      opacity: 0;
+    }
+  }
+
+  h3 {
+    grid-column: 2;
+    font-size: var(--step-2);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  time {
+    grid-column: 3;
+    grid-row: 1;
+    padding-top: 6px;
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    grid-column: 2;
+    margin: 0;
+    color: var(--muted);
+    max-width: 56ch;
+  }
+
+  .dest {
+    grid-column: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    color: var(--accent);
+    font-size: var(--step--1);
+    overflow-wrap: anywhere;
+  }
+
+  a.card:hover h3 {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.15em;
+  }
+
+  a.card:hover .dest span {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  a.card:focus-visible {
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      row-gap: 10px;
+    }
+    .media {
+      grid-row: auto;
+      grid-column: 1 / -1;
+    }
+    h3 {
+      grid-column: 1;
+    }
+    time {
+      grid-column: 2;
+      grid-row: auto;
+    }
+    p,
+    .dest {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .clip,
+    .shot,
+    .media::after {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Animated projects: the video plays while the row is hovered or focused,
+  // or while it is on screen on touch devices. Never with reduced motion.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const canHover = matchMedia("(hover: hover)");
+
+  const play = (video: HTMLVideoElement) => {
+    if (reduceMotion.matches) return;
+    video.play().then(
+      () => video.classList.add("playing"),
+      () => {},
+    );
+  };
+  const stop = (video: HTMLVideoElement) => {
+    video.pause();
+    video.classList.remove("playing");
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const video = entry.target.querySelector("video");
+        if (!video) continue;
+        if (entry.isIntersecting) play(video);
+        else stop(video);
+      }
+    },
+    { threshold: 0.6 },
+  );
+
+  document.querySelectorAll<HTMLElement>(".project[data-video]").forEach((row) => {
+    const video = row.querySelector("video");
+    if (!video) return;
+    if (canHover.matches) {
+      row.addEventListener("pointerenter", () => play(video));
+      row.addEventListener("pointerleave", () => stop(video));
+      row.addEventListener("focusin", () => play(video));
+      row.addEventListener("focusout", () => stop(video));
+    } else {
+      observer.observe(row.querySelector(".media") ?? row);
+    }
+  });
+</script>

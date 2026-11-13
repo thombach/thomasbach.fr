@@ -1,0 +1,94 @@
+[
+  {
+    "id": "mont-blanc",
+    "name": {
+      "en": "Mont Blanc",
+      "fr": "Mont Blanc"
+    },
+    "massif": null,
+    "altitude": 4807,
+    "lat": 45.83263,
+    "lon": 6.86485,
+    "widthM": 6000,
+    "heightM": 7500,
+    "cols": 120,
+    "rows": 150,
+    "interval": 100
+  },
+  {
+    "id": "chamechaude",
+    "name": {
+      "en": "Chamechaude",
+      "fr": "Chamechaude"
+    },
+    "massif": {
+      "en": "Chartreuse",
+      "fr": "Chartreuse"
+    },
+    "altitude": 2082,
+    "lat": 45.28732,
+    "lon": 5.78742,
+    "widthM": 5000,
+    "heightM": 6250,
+    "cols": 120,
+    "rows": 150,
+    "interval": 50
+  },
+  {
+    "id": "grand-pic-de-belledonne",
+    "name": {
+      "en": "Grand Pic de Belledonne",
+      "fr": "Grand Pic de Belledonne"
+    },
+    "massif": {
+      "en": "Belledonne",
+      "fr": "Belledonne"
+    },
+    "altitude": 2977,
+    "lat": 45.17021,
+    "lon": 5.9918,
+    "widthM": 5000,
+    "heightM": 6250,
+    "cols": 120,
+    "rows": 150,
+    "interval": 50
+  },
+  {
+    "id": "mont-ventoux",
+    "name": {
+      "en": "Mont Ventoux",
+      "fr": "Mont Ventoux"
+    },
+    "massif": {
+      "en": "Provence",
+      "fr": "Provence"
+    },
+    "altitude": 1910,
+    "lat": 44.17378,
+    "lon": 5.27867,
+    "widthM": 6000,
+    "heightM": 7500,
+    "cols": 120,
+    "rows": 150,
+    "interval": 50
+  },
+  {
+    "id": "pic-du-midi-d-ossau",
+    "name": {
+      "en": "Pic du Midi d'Ossau",
+      "fr": "Pic du Midi d'Ossau"
+    },
+    "massif": {
+      "en": "Pyrenees",
+      "fr": "Pyrénées"
+    },
+    "altitude": 2884,
+    "lat": 42.84405,
+    "lon": -0.43634,
+    "widthM": 5000,
+    "heightM": 6250,
+    "cols": 120,
+    "rows": 150,
+    "interval": 50
+  }
+]
