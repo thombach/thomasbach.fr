@@ -32,3 +32,6 @@ dist-ssr
 
 # Lighthouse CI reports
 .lighthouseci
+
+# wrangler local state
+.wrangler/

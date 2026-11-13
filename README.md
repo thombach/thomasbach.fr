@@ -31,7 +31,7 @@ link: https://github.com/thombach/my-project # optional
 ---
 ```
 
-4. Commit and push to `main`: GitHub Actions builds and deploys the site.
+4. Commit and push to `main`: Cloudflare builds and deploys the site.
 
 Projects are sorted by date, most recent first. `title`, `description`, `coverAlt` and `linkLabel` accept either one string for both languages or an `en`/`fr` pair. The build fails with a clear message if a field is missing or misspelled.
 
@@ -65,6 +65,8 @@ The Copernicus and OpenStreetMap licences require the credit shown in the footer
 
 ## Deployment
 
-`.github/workflows/cicd.yml` builds the site and runs Lighthouse (reports are attached to the workflow run). On `main`, it syncs `dist/` to S3 and invalidates CloudFront. Required secrets: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `S3_BUCKET`, `CLOUDFRONT_DISTRIBUTION_ID`.
+The site is a static-assets-only Cloudflare Worker, configured in `wrangler.jsonc`. Workers Builds is connected to the GitHub repository: every push runs `npm run build` (Node version from `.node-version`) then `npx wrangler deploy`. `main` goes to production, other branches get a preview URL. Response headers and cache rules live in `public/_headers`.
 
-The infrastructure (S3, CloudFront, Route 53, certificate) is managed with Terraform in the `thomasbach-infra` repository.
+`.github/workflows/cicd.yml` builds the site and runs Lighthouse on every push and pull request (reports are attached to the workflow run). It does not deploy, so it does not block a release.
+
+DNS for `thomasbach.fr` is managed in Cloudflare.

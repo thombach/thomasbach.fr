@@ -1,0 +1,11 @@
+// Cloudflare Workers: static assets only, no server code.
+// Built and deployed by Workers Builds on every push (npm run build, then npx wrangler deploy).
+{
+  "name": "thomasbach-fr",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Serve 404.html with a 404 status for unknown paths. Directory URLs (/fr/) resolve to index.html by default.
+    "not_found_handling": "404-page"
+  }
+}
