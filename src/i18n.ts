@@ -6,6 +6,7 @@ export const ui = {
     metaTitle: "Thomas Bach, full-stack engineer",
     metaDescription:
       "Thomas Bach is a full-stack engineer in Lyon. Projects: web apps, small games, and LED gadgets.",
+    jobTitle: "Full-stack engineer",
     role: "Full-stack engineer based in Lyon. I try things out on my computer, some of them end up here.",
     navProjects: "Projects",
     navAbout: "About",
@@ -40,6 +41,7 @@ export const ui = {
     metaTitle: "Thomas Bach, ingénieur full-stack",
     metaDescription:
       "Thomas Bach est ingénieur full-stack à Lyon. Projets : applications web, petits jeux et gadgets LED.",
+    jobTitle: "Ingénieur full-stack",
     role: "Ingénieur full-stack basé à Lyon. Je teste des trucs sur mon ordi, certains finissent ici.",
     navProjects: "Projets",
     navAbout: "À propos",

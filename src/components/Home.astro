@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import Base from "@/layouts/Base.astro";
 import Topo from "@/components/Topo.astro";
 import Icon from "@/components/Icon.astro";
@@ -18,6 +18,7 @@ const otherLang: Lang = lang === "en" ? "fr" : "en";
 const projects = await getProjects(lang);
 const email = "thomasbach.contact@gmail.com";
 const year = new Date().getFullYear();
+const aboutImage = await getImage({ src: aboutPhoto, width: 600, format: "jpg" });
 
 const socials = [
   { label: "GitHub", href: "https://github.com/thombach", icon: "github" },
@@ -25,9 +26,26 @@ const socials = [
   { label: "itch.io", href: "https://thomasbach.itch.io/", icon: "itch" },
   { label: "Email", href: `mailto:${email}`, icon: "mail" },
 ] as const;
+
+// Structured data so search engines tell this Thomas Bach apart from his namesakes.
+const site = Astro.site ?? new URL("https://thomasbach.fr");
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Thomas Bach",
+  url: new URL(homePath(lang), site).href,
+  jobTitle: t.jobTitle,
+  description: t.metaDescription,
+  image: new URL(aboutImage.src, site).href,
+  email: `mailto:${email}`,
+  address: { "@type": "PostalAddress", addressLocality: "Lyon", addressCountry: "FR" },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Polytech Grenoble" },
+  sameAs: socials.filter((s) => s.href.startsWith("https://")).map((s) => s.href),
+};
 ---
 
 <Base lang={lang} title={t.metaTitle} description={t.metaDescription}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(person)} />
   <a class="skip" href="#projects">{t.navProjects}</a>
   <header class="hero">
     <div class="wrap">
